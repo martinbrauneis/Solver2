@@ -1,2 +1,2 @@
 # Solver2
-# as fist version didnt work   :)
+# as first version didnt work   :)
