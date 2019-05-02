@@ -2,7 +2,7 @@ import numpy as np
 import random
 import inspect
 import time
-
+import datetime
 
 x = np.zeros((11, 11, 11, 5), np.int32)
 
@@ -181,14 +181,16 @@ def nextFree():
     return i-1, j-1, k-1;
 
 def status():
-    n = 0
-    m = 0
+    n = 1
+    m = 1
     for i in xrange(3, 8):
         for j in xrange(3, 8):
             for k in xrange(3, 8):
-                n = n + x[i,j,k,1] * (i+1) * (j+1) * (k+1)
-                m = m + 48 * (i+1) * (j+1) * (k+1)
-    return 100*n/m
+                n = n * long((x[i,j,k,1] + 1))
+                m = m * 48
+    print("n = %d" % n)
+    print("m = %d" % m)
+    return float(100*n/m)
 
 
 start_time = time.time()
@@ -214,9 +216,10 @@ while True:
         n += 1
         m = 0
         i, j, k = nextFree()
-        if n >= best:
+        if n >= 24:
             print(fehlende())
             print("%f" % status())
+            print(datetime.datetime.now())
             printArray()
             if n > best: best = n
     else:
