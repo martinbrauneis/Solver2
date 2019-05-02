@@ -200,12 +200,14 @@ start_time = time.time()
 #[][][][4]: k base of varianz
 
 iniArray()
-n = 0
-m = 0
+n = 1
+m = 10
 i, j, k = nextFree()
 best = 0
 
-while True: 
+while True:
+    print(x[3][3][3][0])
+    print(x[3][3][3][1])
     while addBrick(i, j, k, n, m) == False and m < 48:
         m += 1
     if m != 48:
