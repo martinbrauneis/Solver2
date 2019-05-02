@@ -206,8 +206,8 @@ i, j, k = nextFree()
 best = 0
 
 while True:
-    print(x[3][3][3][0])
-    print(x[3][3][3][1])
+    #print(x[3][3][3][0])
+    #print(x[3][3][3][1])
     while addBrick(i, j, k, n, m) == False and m < 48:
         m += 1
     if m != 48:
