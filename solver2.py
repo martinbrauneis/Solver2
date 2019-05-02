@@ -131,10 +131,7 @@ def printArray():
     for i in xrange(3, 8):
         for j in xrange(3, 8):
             for k in xrange(3, 8):
-                if x[i,j,k,0] == 0: 
-                    y[i-3,j-3,k-3,0] = 99
-                else:
-                    y[i-3,j-3,k-3,0] = x[i,j,k,0]
+                y[i-3,j-3,k-3,0] = x[i,j,k,0] + 10
                 y[i-3,j-3,k-3,1] = x[i,j,k,1] + 10
     print("----------")
     print("")
@@ -189,8 +186,8 @@ def status():
     for i in xrange(3, 8):
         for j in xrange(3, 8):
             for k in xrange(3, 8):
-                n = n + x[i,j,k,1]
-                m = m + 48
+                n = n + x[i,j,k,1] * (i+1) * (j+1) * (k+1)
+                m = m + 48 * (i+1) * (j+1) * (k+1)
     return 100*n/m
 
 
@@ -203,12 +200,12 @@ start_time = time.time()
 #[][][][4]: k base of varianz
 
 iniArray()
-n = 10
+n = 0
 m = 0
 i, j, k = nextFree()
 best = 0
 
-while(fehlende() > 0): ### ziel > 0
+while True: 
     while addBrick(i, j, k, n, m) == False and m < 48:
         m += 1
     if m != 48:
@@ -217,7 +214,7 @@ while(fehlende() > 0): ### ziel > 0
         i, j, k = nextFree()
         if n >= best:
             print(fehlende())
-            print(status())
+            print("%f" % status())
             printArray()
             if n > best: best = n
     else:
