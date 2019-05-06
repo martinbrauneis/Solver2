@@ -2,7 +2,7 @@ import numpy as np
 import random
 import inspect
 import time
-import datetime
+
 
 x = np.zeros((11, 11, 11, 5), np.int32)
 
@@ -22,21 +22,12 @@ def subBrick(n):
     stopp = False
     l = 0
     i = 3
-    m = 0
-    ii = 0
-    jj = 0
-    kk = 0
     while i < 8 and stopp == False:
         j = 3
         while j < 8 and stopp == False:
             k = 3
             while k < 8 and stopp == False:
                 if x[i,j,k,0] == n:
-                    if l == 0:
-                        m = x[i,j,k,1]
-                        ii = x[i,j,k,2]
-                        jj = x[i,j,k,3]
-                        kk = x[i,j,k,4]
                     x[i,j,k,0] = 0
                     x[i,j,k,1] = 0
                     x[i,j,k,2] = 0
@@ -47,7 +38,6 @@ def subBrick(n):
                 k += 1
             j += 1
         i += 1
-    return m, ii, jj, kk;
 
 def addBrick(i, j, k, n, m):
     status = False
@@ -103,11 +93,11 @@ def addBrick(i, j, k, n, m):
             x[i+ri*2,j+rj*2,k+rk*2,0] = n
             x[i+ri*3,j+rj*3,k+rk*3,0] = n
             x[i+ni+ri*pos,j+nj+rj*pos,k+nk+rk*pos,0] = n
-            x[i,j,k,1] = m
-            x[i+ri*1,j+rj*1,k+rk*1,1] = m
-            x[i+ri*2,j+rj*2,k+rk*2,1] = m
-            x[i+ri*3,j+rj*3,k+rk*3,1] = m
-            x[i+ni+ri*pos,j+nj+rj*pos,k+nk+rk*pos,1] = m
+            x[i,j,k,1] = m+10
+            x[i+ri*1,j+rj*1,k+rk*1,1] = m+10
+            x[i+ri*2,j+rj*2,k+rk*2,1] = m+10
+            x[i+ri*3,j+rj*3,k+rk*3,1] = m+10
+            x[i+ni+ri*pos,j+nj+rj*pos,k+nk+rk*pos,1] = m+10
             x[i,j,k,2] = i
             x[i+ri*1,j+rj*1,k+rk*1,2] = i
             x[i+ri*2,j+rj*2,k+rk*2,2] = i
@@ -131,13 +121,15 @@ def printArray():
     for i in xrange(3, 8):
         for j in xrange(3, 8):
             for k in xrange(3, 8):
-                y[i-3,j-3,k-3,0] = x[i,j,k,0] + 10
-                y[i-3,j-3,k-3,1] = x[i,j,k,1] + 10
+                if x[i,j,k,0] == 0: y[i-3,j-3,k-3,0] = 99
+                else: y[i-3,j-3,k-3,0] = x[i,j,k,0]
+                if x[i,j,k,1] == 0: y[i-3,j-3,k-3,1] = 99
+                else: y[i-3,j-3,k-3,1] = x[i,j,k,1]
     print("----------")
     print("")
     for i in xrange(0, 5):
         for j in xrange(0, 5):
-            print("%d %d %d %d %d || %d %d %d %d %d" % (y[i,j,0,0], y[i,j,1,0], y[i,j,2,0], y[i,j,3,0], y[i,j,4,0], y[i,j,0,1], y[i,j,1,1], y[i,j,2,1], y[i,j,3,1], y[i,j,3,1])) 
+            print("%d %d %d %d %d || %d %d %d %d %d" % (y[i,j,0,0], y[i,j,1,0], y[i,j,2,0], y[i,j,3,0], y[i,j,4,0], y[i,j,0,1], y[i,j,1,1], y[i,j,2,1], y[i,j,3,1], y[i,j,4,1])) 
         print("")
     print("----------")
 
@@ -150,11 +142,11 @@ def fehlende():
     return n/5
 
 def lastAdd():
-    n = 0
+    n = 10
     m = 0
-    ii = 0
-    jj = 0
-    kk = 0
+    ii = 3
+    jj = 3
+    kk = 3
     for i in xrange(3, 8):
         for j in xrange(3, 8):
             for k in xrange(3, 8):
@@ -180,17 +172,14 @@ def nextFree():
         i += 1
     return i-1, j-1, k-1;
 
-def status():
-    n = 1
-    m = 1
+
+def speichern(zeit):
+    f= open("solved.txt","w+")
+    f.write("--- %s seconds ---\n\n" % zeit)
     for i in xrange(3, 8):
         for j in xrange(3, 8):
-            for k in xrange(3, 8):
-                n = n * long((x[i,j,k,1] + 1))
-                m = m * 48
-    print("n = %d" % n)
-    print("m = %d" % m)
-    return float(100*n/m)
+            f.write("%d %d %d %d %d\n" % (x[i][j][3][0], x[i][j][4][0], x[i][j][5][0], x[i][j][6][0], x[i][j][7][0])) 
+        f.write("\n")
 
 
 start_time = time.time()
@@ -202,39 +191,31 @@ start_time = time.time()
 #[][][][4]: k base of varianz
 
 iniArray()
-n = 1
+n = 10
 m = 10
 i, j, k = nextFree()
 best = 0
+nFehlende = 25
 
-while True:
-    #print(x[3][3][3][0])
-    #print(x[3][3][3][1])
-    while addBrick(i, j, k, n, m) == False and m < 48:
-        m += 1
-    if m != 48:
+while(nFehlende > 0):
+    status = addBrick(i, j, k, n, m-10)
+    if status == True:
         n += 1
-        m = 0
+        m = 10
         i, j, k = nextFree()
-        if n >= 24:
-            print(fehlende())
-            print("%f" % status())
-            print(datetime.datetime.now())
+        if n >= best:
+            nFehlende = fehlende()
+            print(nFehlende)
             printArray()
             if n > best: best = n
     else:
-        #print(fehlende())
-        #print(n,m,i,j,k)
-        while(m >= 47):
+        while(m > 57):
             n, m, i, j, k = lastAdd()
-            m, j, j, k = subBrick(n)
+            subBrick(n)
         m += 1
-        #print(fehlende())
-        #print(n,m,i,j,k)
-        #printArray()
 
 printArray()
 print(fehlende())
 print("--- %s seconds ---" % (time.time() - start_time))
-
+speichern(time.time() - start_time) 
 exit()
